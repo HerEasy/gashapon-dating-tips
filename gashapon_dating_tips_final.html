@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>脱单技巧扭蛋机</title>
+<style>
+  body {
+    font-family: "Segoe UI", "PingFang SC", sans-serif;
+    background: linear-gradient(135deg, #fde2f4, #ece8ff, #e3f2ff);
+    margin: 0;
+    color: #3b0764;
+  }
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: linear-gradient(to right, #fdf2f8, #ede9fe);
+    padding: 16px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex; align-items: center; justify-content: space-between;
+    z-index: 10;
+  }
+  header h1 {
+    font-size: 22px;
+    margin: 0;
+    font-weight: bold;
+    background: linear-gradient(to right, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header .author {
+    font-size: 15px;
+    color: #9333ea;
+    font-weight: bold;
+  }
+  main {
+    padding: 100px 20px 40px;
+    text-align: center;
+  }
+  .card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 30px;
+    margin: 0 auto 30px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    max-width: 600px;
+  }
+  button {
+    cursor: pointer;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    padding: 12px 22px;
+    color: white;
+    background: linear-gradient(to right, #ec4899, #8b5cf6);
+    margin: 8px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+  button:hover { transform: scale(1.05); }
+  textarea, input {
+    width: 100%;
+    border: 2px solid #ddd;
+    border-radius: 14px;
+    padding: 12px;
+    font-size: 15px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+  }
+  textarea:focus, input:focus { border-color: #8b5cf6; outline: none; }
+  .hidden { display: none; }
+  .category-btn {
+    display: inline-block;
+    padding: 10px 14px;
+    margin: 5px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .category-btn.active {
+    border-color: #8b5cf6;
+    background: #f5f3ff;
+  }
+  .capsule {
+    background: #fff0f5;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    animation: bounce 0.4s ease;
+    margin-top: 20px;
+  }
+  @keyframes bounce {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>💖 脱单技巧扭蛋机 💖</h1>
+  <div class="author">💕 by Norah</div>
+</header>
+
+<main>
+  <div id="home" class="card">
+    <div style="margin-bottom: 20px;">
+      <svg width="160" height="200" viewBox="0 0 120 150" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 10 h80 a10 10 0 0 1 10 10 v100 a20 20 0 0 1 -20 20 h-60 a20 20 0 0 1 -20 -20 v-100 a10 10 0 0 1 10 -10 z" fill="url(#grad)" stroke="#e879f9" stroke-width="4"/>
+        <defs>
+          <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f9a8d4"/>
+            <stop offset="100%" stop-color="#fbcfe8"/>
+          </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="7" fill="#f472b6"/>
+        <circle cx="40" cy="60" r="7" fill="#a78bfa"/>
+        <circle cx="80" cy="60" r="7" fill="#4ade80"/>
+        <circle cx="50" cy="80" r="7" fill="#60a5fa"/>
+        <circle cx="70" cy="80" r="7" fill="#fb7185"/>
+        <rect x="40" y="115" width="40" height="15" rx="6" fill="#ec4899"/>
+        <text x="60" y="126" text-anchor="middle" fill="white" font-size="10" font-weight="bold">转</text>
+      </svg>
+    </div>
+
+    <p><b>💊 已收集 <span id="tip-count">0</span> 条脱单秘籍</b></p>
+    <button onclick="spin()">🎰 扭一个试试！</button>
+    <button onclick="showSubmit()">🎁 投递技巧</button>
+    <button onclick="showStats()">📈 查看统计</button>
+    <div id="capsule" class="capsule hidden"></div>
+  </div>
+
+  <div id="submit" class="card hidden">
+    <button onclick="showHome()">← 返回</button>
+    <h2>📝 投递脱单技巧</h2>
+    <div>
+      <span class="category-btn active" data-cat="chat">聊天话题</span>
+      <span class="category-btn" data-cat="date">约会地点</span>
+      <span class="category-btn" data-cat="style">穿搭建议</span>
+      <span class="category-btn" data-cat="general">其他建议</span>
+    </div>
+    <textarea id="tip-content" placeholder="写下你的脱单小技巧..."></textarea>
+    <input id="tip-author" placeholder="署名（可留空）">
+    <button onclick="submitTip()">🎁 投入扭蛋机</button>
+  </div>
+
+  <div id="stats" class="card hidden">
+    <button onclick="showHome()">← 返回</button>
+    <h2>📊 技巧统计</h2>
+    <div id="stats-content"></div>
+  </div>
+</main>
+
+<script>
+let tips = JSON.parse(localStorage.getItem('datingTips') || '[]');
+let currentCategory = 'chat';
+
+const categories = {
+  chat: '聊天话题',
+  date: '约会地点',
+  style: '穿搭建议',
+  general: '其他建议'
+};
+
+function showHome() {
+  document.getElementById('home').classList.remove('hidden');
+  document.getElementById('submit').classList.add('hidden');
+  document.getElementById('stats').classList.add('hidden');
+  document.getElementById('tip-count').textContent = tips.length;
+}
+
+function showSubmit() {
+  document.getElementById('home').classList.add('hidden');
+  document.getElementById('submit').classList.remove('hidden');
+  document.getElementById('stats').classList.add('hidden');
+}
+
+function showStats() {
+  document.getElementById('home').classList.add('hidden');
+  document.getElementById('submit').classList.add('hidden');
+  document.getElementById('stats').classList.remove('hidden');
+  renderStats();
+}
+
+document.querySelectorAll('.category-btn').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentCategory = btn.dataset.cat;
+  };
+});
+
+function submitTip() {
+  const content = document.getElementById('tip-content').value.trim();
+  if (!content) return alert('请写下内容');
+  const author = document.getElementById('tip-author').value.trim() || '匿名好友';
+  const newTip = {
+    id: Date.now(),
+    content, author, category: currentCategory, timestamp: new Date().toISOString()
+  };
+  tips.push(newTip);
+  localStorage.setItem('datingTips', JSON.stringify(tips));
+  document.getElementById('tip-content').value = '';
+  document.getElementById('tip-author').value = '';
+  alert('已投递！🎉');
+  showHome();
+}
+
+function spin() {
+  if (tips.length === 0) return alert('暂无内容，请先投递几条～');
+  const tip = tips[Math.floor(Math.random() * tips.length)];
+  const div = document.getElementById('capsule');
+  div.innerHTML = `
+    <p><b>${categories[tip.category]}</b></p>
+    <p>${tip.content}</p>
+    <p style="color:#7c3aed;font-size:14px;">来自：${tip.author}</p>`;
+  div.classList.remove('hidden');
+}
+
+function renderStats() {
+  if (tips.length === 0) {
+    document.getElementById('stats-content').innerHTML = '<p>暂无数据</p>';
+    return;
+  }
+  const counts = {};
+  for (let cat of Object.keys(categories)) counts[cat] = 0;
+  for (let t of tips) counts[t.category]++;
+  let html = '<ul style="text-align:left;">';
+  for (let c in counts) html += `<li>${categories[c]}：${counts[c]} 条</li>`;
+  html += '</ul>';
+  document.getElementById('stats-content').innerHTML = html;
+}
+
+showHome();
+</script>
+</body>
+</html>
